@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -10,4 +14,30 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* Falling dot animation used behind the main title */
+.falling-dot {
+  position: absolute;
+  top: -20px;
+  width: 8px;
+  height: 8px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 9999px;
+  box-shadow: 0 0 12px rgba(255,255,255,0.2);
+  animation: fall 6s linear infinite;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-20px) scale(0.8);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(100vh) scale(0.6);
+    opacity: 0;
+  }
 }
