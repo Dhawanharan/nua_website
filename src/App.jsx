@@ -15,6 +15,28 @@ import ev11 from './assets/past_events/ev-11.jpg';
 import ev12 from './assets/past_events/ev-12.jpg';
 import ev13 from './assets/past_events/ev-13.jpg';
 import ev14 from './assets/past_events/ev-14.jpg';
+import president from './assets/comitee_pics/president.png';
+import vice_president from './assets/comitee_pics/vicepresident.png';
+import as_treasurer from './assets/comitee_pics/ass-treasurer.png';
+import coeditor from './assets/comitee_pics/coeditor.png';
+import editor from './assets/comitee_pics/editor.png';
+import evntmanage from './assets/comitee_pics/eventmanage.png';
+import secretary from './assets/comitee_pics/secretary.png';
+import smcordinator from './assets/comitee_pics/smcordinator.png';
+import treasurer from './assets/comitee_pics/treasurer.png';
+import vicesec from './assets/comitee_pics/vice-sec.png';
+import cosocial from './assets/comitee_pics/co-social.jpg';
+
+import bogawanthalawa from './assets/area_rep/bogawanthalawa.png';
+import dayagama from './assets/area_rep/dayagama.png';
+import dickoya from './assets/area_rep/dickoya.png';
+import hatton from './assets/area_rep/hatton.png';
+import kotagala from './assets/area_rep/kotagala.png';
+import maskeliya from './assets/area_rep/maskeliya.png';
+import talawakele from './assets/area_rep/talawakale.png';
+import watawala from './assets/area_rep/watawala.png';
+import norwood from './assets/area_rep/norwood.png';
+import nuwaraeliya from './assets/area_rep/nuwaraeliya.png';
 
 // --- HIGH QUALITY STATIC PORTRAIT & LANDSCAPE IMAGES FROM UNSPLASH ---
 // Featuring nature, education, study, and Sri Lankan upcountry aesthetic.
@@ -34,8 +56,8 @@ const IMAGES = {
     "https://z-p3-scontent.fcmb9-1.fna.fbcdn.net/v/t39.30808-6/476258211_122173327484274668_2791544314208635422_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=107&ccb=1-7&_nc_sid=833d8c&_nc_eui2=AeEHI_MsSdTdKXYJEhIxe5RU8hCcXX2a7_zyEJxdfZrv_LbFw3F3LAJLuAZczYWwgTBf4xttFC9WRfaphOnaC4ie&_nc_ohc=jClxalDj9TYQ7kNvwGFCZ5j&_nc_oc=AdoGeS5YgchsFJDUPONI99cQFcpVn8QsEnlUpzRUDupYFIDoVv1t5IElK2pn0UUNZ8k&_nc_zt=23&_nc_ht=z-p3-scontent.fcmb9-1.fna&_nc_gid=JhhrfKLlDJOvvKdg0qi44Q&_nc_ss=7a2a8&oh=00_Af5wvvzOYwezzwzn5reo1VULGoqVGZQHQtSFkjhyUwxoJg&oe=6A13C70C?auto=format&fit=crop&q=80&w=800", // School classroom project
   ],
   profiles: [
-    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300",
-    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=300",
+    president,
+    vice_president,
     "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=300",
     "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=300",
     "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=300",
@@ -56,31 +78,7 @@ const UPCOMING_EVENTS = [
     //date: "July 15, 2026",
     //location: "Town Hall, Nuwara Eliya",
     image: IMAGES.upcoming[1]
-  },
-  /*{
-    id: 2,
-    title: "Pathways to Success",
-    desc: "A district-wide comprehensive seminar & university entry guide for G.C.E. A/L school students of Nuwara Eliya.",
-    date: "August 22, 2026",
-    location: "Gamini National School Auditorium",
-    image: IMAGES.upcoming[1]
-  },
-  {
-    id: 3,
-    title: "Upcountry Digital Summit",
-    desc: "Interactive bootcamp exploring modern software, artificial intelligence, and coding workshops for local youth.",
-    date: "October 10, 2026",
-    location: "Kotmale IT Center",
-    image: IMAGES.upcoming[2]
-  },
-  {
-    id: 4,
-    title: "Eco-Heritage Forest Initiative",
-    desc: "Reforestation and biodiversity protection drive within the surrounding valleys of Pidurutalagala Mountain.",
-    date: "November 05, 2026",
-    location: "Radella Sanctuary, Nuwara Eliya",
-    image: IMAGES.upcoming[3]
-  }*/
+  }
 ];
 
 const PAST_EVENTS = [
@@ -199,28 +197,30 @@ const PAST_EVENTS = [
 ];
 
 const EXCO_MEMBERS = [
-  { name: "Puvanalogini", role: "President", university: "University of Colombo", img: IMAGES.profiles[0] },
-  { name: "Viyanujan", role: "Vice President", university: "University of Ruhuna", img: IMAGES.profiles[1] },
-  { name: "Dhinesh", role: "Secretary", university: "University of Jaffna", img: IMAGES.profiles[1] },
-  { name: "Ishalini", role: "Vice Secretary", university: "Eastern University", img: IMAGES.profiles[0] },
-  { name: "Sadhurshika", role: "Treasurer", university: "University of Kelaniya", img: IMAGES.profiles[0] },
-  { name: "Kugapriya", role: "Assistant Treasurer", university: "University of Ruhuna", img: IMAGES.profiles[0] },
-  { name: "Saravanapriyan", role: "Social Media Coordinator", university: "Uva Wellassa University", img: IMAGES.profiles[1] },
-  { name: "Dharmika", role: "Editor", university: "University of Peradeniya", img: IMAGES.profiles[0] },
-  { name: "Lakshika", role: "Co-Editor", university: "Uva Wellassa University", img: IMAGES.profiles[0] },
-  { name: "Nimalini", role: "Event Management Coordinator", university: "Sabaragamuwa University", img: IMAGES.profiles[0] }
+  { name: "Puvanalogini", role: "President", university: "University of Colombo", img: president },
+  { name: "Viyanujan", role: "Vice President", university: "University of Ruhuna", img: vice_president },
+  { name: "Dhinesh", role: "Secretary", university: "University of Jaffna", img: secretary },
+  { name: "Ishalini", role: "Vice Secretary", university: "Eastern University", img: vicesec },
+  { name: "Sadhurshika", role: "Treasurer", university: "University of Kelaniya", img: treasurer },
+  { name: "Kugapriya", role: "Assistant Treasurer", university: "University of Ruhuna", img: as_treasurer },
+  { name: "Saravanapriyan", role: "Social Media Coordinator", university: "Uva Wellassa University", img: smcordinator },
+  { name: "Dhawanharan", role: "Co-Social Media Coordinator", university: "Eastern University", img: cosocial },
+  { name: "Dharmika", role: "Editor", university: "University of Peradeniya", img: editor },
+  { name: "Lakshika", role: "Co-Editor", university: "Uva Wellassa University", img: coeditor },
+  { name: "Nimalini", role: "Event Management Coordinator", university: "Sabaragamuwa University", img: evntmanage }
 ];
 
 const AREA_REPRESENTATIVES = [
-  { name: "Sadhana", division: "Kotagala", university: "University of Jaffna", img: IMAGES.profiles[0] },
-  { name: "Dhayalini", division: "Hatton", university: "University of Jaffna", img: IMAGES.profiles[0] },
-  { name: "Pramya", division: "Dickoya", university: "Eastern University", img: IMAGES.profiles[0] },
-  { name: "Dhanushk", division: "Norwood", university: "University of Sri Jayewardenepura", img: IMAGES.profiles[1] },
-  { name: "Kavishan", division: "Thalawakella", university: "University of Jaffna", img: IMAGES.profiles[1] },
-  { name: "Pavithra", division: "Nuwara Eliya", university: "Sabaragamuwa University", img: IMAGES.profiles[0] },
-  { name: "Baskaran", division: "Watawala", university: "Eastern University", img: IMAGES.profiles[1] },
-  { name: "Thiruselvam", division: "Maskeliya", university: "University of Jaffna", img: IMAGES.profiles[1] },
-  { name: "Babithra", division: "Dayagama", university: "Vavuniya University", img: IMAGES.profiles[0] }
+  { name: "Sadhana", division: "Kotagala", university: "University of Jaffna", img: kotagala },
+  { name: "Dhayalini", division: "Hatton", university: "University of Jaffna", img: hatton },
+  { name: "Pramya", division: "Dickoya", university: "Eastern University", img: dickoya },
+  { name: "Dhanushk", division: "Norwood", university: "University of Sri Jayewardenepura", img: norwood },
+  { name: "Kavishan", division: "Thalawakella", university: "University of Jaffna", img: talawakele },
+  { name: "Pavithra", division: "Nuwara Eliya", university: "Sabaragamuwa University", img: nuwaraeliya },
+  { name: "Baskaran", division: "Watawala", university: "Eastern University", img: watawala },
+  { name: "Thiruselvam", division: "Bogawanthalawa", university: "University of Jaffna", img: bogawanthalawa },
+  { name: "Babithra", division: "Dayagama", university: "Vavuniya University", img: dayagama },
+  { name: "Loshanya", division: "Maskeliya", university: "University of Jaffna", img: maskeliya }
 ];
 
 export default function App() {
