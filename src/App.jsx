@@ -15,6 +15,8 @@ import ev11 from './assets/past_events/ev-11.jpg';
 import ev12 from './assets/past_events/ev-12.jpg';
 import ev13 from './assets/past_events/ev-13.jpg';
 import ev14 from './assets/past_events/ev-14.jpg';
+import ev15 from './assets/past_events/ev-15.jpeg'
+
 import president from './assets/comitee_pics/president.png';
 import vice_president from './assets/comitee_pics/vicepresident.png';
 import as_treasurer from './assets/comitee_pics/ass-treasurer.png';
@@ -193,6 +195,14 @@ const PAST_EVENTS = [
     date: "March 08, 2026",
     location: "Zoom (Online)",
     image: ev14
+  },
+  {
+    id: 15,
+    title: "GCE O/L Seminar 2026",
+    desc: "Learn Today; Lead Tomorrow-Science and maths seminar for O/L Students.",
+    date: "July , 2026",
+    location: "Wellington T.M.V",
+    image: ev1
   }
 ];
 
