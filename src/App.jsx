@@ -202,7 +202,7 @@ const PAST_EVENTS = [
     desc: "Learn Today; Lead Tomorrow-Science and maths seminar for O/L Students.",
     date: "July , 2026",
     location: "Wellington T.M.V",
-    image: ev1
+    image: ev15
   }
 ];
 
