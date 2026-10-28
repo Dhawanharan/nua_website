@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import {
   CalendarDays,
@@ -39,7 +39,7 @@ export const EventsManager = () => {
   const [saveLoading, setSaveLoading] = useState(false);
   const [message, setMessage] = useState(null);
 
-  const fetchEvents = async () => {
+  const fetchEvents = useCallback(async () => {
     try {
       setLoading(true);
       const res = await fetch(`${apiBase}/events`);
@@ -52,11 +52,11 @@ export const EventsManager = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [apiBase]);
 
   useEffect(() => {
     fetchEvents();
-  }, [apiBase]);
+  }, [fetchEvents]);
 
   const handleOpenModal = (event = null) => {
     if (event) {

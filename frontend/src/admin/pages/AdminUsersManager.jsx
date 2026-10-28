@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import {
   ShieldAlert,
@@ -33,7 +33,7 @@ export const AdminUsersManager = () => {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState(null);
 
-  const fetchAdmins = async () => {
+  const fetchAdmins = useCallback(async () => {
     try {
       setLoading(true);
       const res = await fetch(`${apiBase}/admins`, {
@@ -50,11 +50,11 @@ export const AdminUsersManager = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [apiBase, token]);
 
   useEffect(() => {
     fetchAdmins();
-  }, [apiBase, token]);
+  }, [fetchAdmins]);
 
   const handleOpenModal = (admin = null) => {
     if (admin) {
