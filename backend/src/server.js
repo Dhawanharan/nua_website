@@ -43,8 +43,18 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Health Check Endpoint
-app.get('/api/health', (req, res) => {
+// Root & Health Check Endpoints
+app.get('/', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    service: 'NUA Backend API',
+    version: '2.0.0',
+    message: 'NUA Backend API is running live and healthy.',
+    endpoints: ['/api/events', '/api/committee', '/api/settings', '/api/auth/login'],
+  });
+});
+
+app.get(['/health', '/api/health'], (req, res) => {
   res.status(200).json({
     status: 'ok',
     service: 'NUA Backend API',
@@ -53,13 +63,20 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Mount API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/admins', adminUsersRoutes);
-app.use('/api/events', eventsRoutes);
-app.use('/api/committee', committeeRoutes);
-app.use('/api/settings', settingsRoutes);
-app.use('/api/upload', uploadRoutes);
+// Mount API Routes (on both /api/path and /path to prevent 404 from missing prefix)
+const routeList = [
+  ['/auth', authRoutes],
+  ['/admins', adminUsersRoutes],
+  ['/events', eventsRoutes],
+  ['/committee', committeeRoutes],
+  ['/settings', settingsRoutes],
+  ['/upload', uploadRoutes],
+];
+
+routeList.forEach(([path, router]) => {
+  app.use(`/api${path}`, router);
+  app.use(path, router); // Fail-safe
+});
 
 // 404 Handler
 app.use((req, res) => {

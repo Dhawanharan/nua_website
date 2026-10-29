@@ -2,7 +2,17 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext(null);
 
-const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+// Normalize API URL: handles trailing slashes, ensures /api suffix
+const getApiBase = () => {
+  let url = (process.env.REACT_APP_API_URL || 'http://localhost:5000/api').trim();
+  url = url.replace(/\/+$/, '');
+  if (!url.endsWith('/api')) {
+    url = `${url}/api`;
+  }
+  return url;
+};
+
+const API_BASE = getApiBase();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {

@@ -245,7 +245,8 @@ export function PublicWebsite() {
   const [upcomingEventsList, setUpcomingEventsList] = useState(UPCOMING_EVENTS);
 
   useEffect(() => {
-    const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+    let rawUrl = (process.env.REACT_APP_API_URL || 'http://localhost:5000/api').trim().replace(/\/+$/, '');
+    const API_BASE = rawUrl.endsWith('/api') ? rawUrl : `${rawUrl}/api`;
     fetch(`${API_BASE}/events`)
       .then((res) => res.json())
       .then((data) => {
