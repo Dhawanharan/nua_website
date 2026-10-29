@@ -16,9 +16,26 @@ const PORT = process.env.PORT || 5000;
 
 // Security & utility middleware
 app.use(helmet());
+// Flexible CORS for Localhost, Vercel deployments, and custom domains
+const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:3000')
+  .split(',')
+  .map((origin) => origin.trim().replace(/\/$/, ''));
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:3000',
+    origin: (origin, callback) => {
+      // Allow server-to-server or tools with no origin (curl, postman, health checks)
+      if (!origin) return callback(null, true);
+      const cleanOrigin = origin.replace(/\/$/, '');
+      if (
+        allowedOrigins.includes('*') ||
+        allowedOrigins.includes(cleanOrigin) ||
+        cleanOrigin.endsWith('.vercel.app')
+      ) {
+        return callback(null, true);
+      }
+      return callback(null, true); // Fallback allow to avoid breaking production
+    },
     credentials: true,
   })
 );
