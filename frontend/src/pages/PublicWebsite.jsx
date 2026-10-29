@@ -240,13 +240,17 @@ export function PublicWebsite() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // Dynamic Events state with local fallback
+  // Dynamic Events & Committee state with local fallback
   const [pastEventsList, setPastEventsList] = useState(PAST_EVENTS);
   const [upcomingEventsList, setUpcomingEventsList] = useState(UPCOMING_EVENTS);
+  const [excoList, setExcoList] = useState(EXCO_MEMBERS);
+  const [repsList, setRepsList] = useState(AREA_REPRESENTATIVES);
 
   useEffect(() => {
     let rawUrl = (process.env.REACT_APP_API_URL || 'http://localhost:5000/api').trim().replace(/\/+$/, '');
     const API_BASE = rawUrl.endsWith('/api') ? rawUrl : `${rawUrl}/api`;
+
+    // Fetch Events
     fetch(`${API_BASE}/events`)
       .then((res) => res.json())
       .then((data) => {
@@ -273,6 +277,33 @@ export function PublicWebsite() {
             }));
           if (past.length > 0) setPastEventsList(past);
           if (upcoming.length > 0) setUpcomingEventsList(upcoming);
+        }
+      })
+      .catch(() => {});
+
+    // Fetch Committee
+    fetch(`${API_BASE}/committee`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.data && data.data.length > 0) {
+          const exco = data.data
+            .filter((m) => m.category === 'exco')
+            .map((m) => ({
+              name: m.name,
+              role: m.role,
+              university: m.university || 'Undergraduate',
+              img: m.image_url || president,
+            }));
+          const reps = data.data
+            .filter((m) => m.category === 'rep')
+            .map((m) => ({
+              name: m.name,
+              division: m.area || 'Representative',
+              university: m.university || 'Undergraduate',
+              img: m.image_url || hatton,
+            }));
+          if (exco.length > 0) setExcoList(exco);
+          if (reps.length > 0) setRepsList(reps);
         }
       })
       .catch(() => {});
@@ -344,13 +375,13 @@ export function PublicWebsite() {
   };
 
   // Filter ExCo / Area Rep list
-  const filteredExCo = EXCO_MEMBERS.filter(member =>
+  const filteredExCo = excoList.filter(member =>
     member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     member.university.toLowerCase().includes(searchQuery.toLowerCase()) ||
     member.role.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const filteredReps = AREA_REPRESENTATIVES.filter(rep =>
+  const filteredReps = repsList.filter(rep =>
     rep.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     rep.division.toLowerCase().includes(searchQuery.toLowerCase()) ||
     rep.university.toLowerCase().includes(searchQuery.toLowerCase())

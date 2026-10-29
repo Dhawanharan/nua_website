@@ -15,6 +15,33 @@ import {
   GraduationCap,
 } from 'lucide-react';
 
+export const EXCO_ROLES = [
+  'President',
+  'Vice President',
+  'Secretary',
+  'Vice Secretary',
+  'Treasurer',
+  'Assistant Treasurer',
+  'Social Media Coordinator',
+  'Co-Social Media Coordinator',
+  'Editor',
+  'Co-Editor',
+  'Project Coordinator',
+];
+
+export const REPRESENTATIVE_AREAS = [
+  'Bogawanthalawa',
+  'Dayagama',
+  'Dickoya',
+  'Hatton',
+  'Kotagala',
+  'Maskeliya',
+  'Norwood',
+  'Nuwara Eliya',
+  'Talawakale',
+  'Watawala',
+];
+
 export const CommitteeManager = () => {
   const { token, apiBase } = useAuth();
   const [members, setMembers] = useState([]);
@@ -27,7 +54,7 @@ export const CommitteeManager = () => {
   const [editingMember, setEditingMember] = useState(null);
   const [form, setForm] = useState({
     name: '',
-    role: '',
+    role: EXCO_ROLES[0],
     category: 'exco',
     area: '',
     university: '',
@@ -65,9 +92,9 @@ export const CommitteeManager = () => {
       setEditingMember(member);
       setForm({
         name: member.name || '',
-        role: member.role || '',
+        role: member.category === 'rep' ? 'Area Representative' : (member.role || EXCO_ROLES[0]),
         category: member.category || activeTab,
-        area: member.area || '',
+        area: member.area || (member.category === 'rep' ? REPRESENTATIVE_AREAS[0] : ''),
         university: member.university || '',
         image_url: member.image_url || '',
         display_order: member.display_order || 0,
@@ -76,12 +103,12 @@ export const CommitteeManager = () => {
       setEditingMember(null);
       setForm({
         name: '',
-        role: '',
+        role: activeTab === 'rep' ? 'Area Representative' : EXCO_ROLES[0],
         category: activeTab,
-        area: '',
+        area: activeTab === 'rep' ? REPRESENTATIVE_AREAS[0] : '',
         university: '',
         image_url: '',
-        display_order: members.length,
+        display_order: 0,
       });
     }
     setUploadError('');
@@ -122,9 +149,28 @@ export const CommitteeManager = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.name || !form.role) {
-      alert('Name and Role/Designation are required.');
+    if (!form.name) {
+      alert('Member full name is required.');
       return;
+    }
+
+    const payload = { ...form };
+
+    if (payload.category === 'exco') {
+      if (!payload.role) {
+        payload.role = EXCO_ROLES[0];
+      }
+      payload.area = null; // Area not needed for Exco
+      const roleIndex = EXCO_ROLES.indexOf(payload.role);
+      payload.display_order = roleIndex !== -1 ? roleIndex + 1 : 99;
+    } else {
+      // Area Representative
+      payload.role = 'Area Representative';
+      if (!payload.area) {
+        payload.area = REPRESENTATIVE_AREAS[0];
+      }
+      const areaIndex = REPRESENTATIVE_AREAS.indexOf(payload.area);
+      payload.display_order = areaIndex !== -1 ? areaIndex + 1 : 99;
     }
 
     setSaveLoading(true);
@@ -140,7 +186,7 @@ export const CommitteeManager = () => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
@@ -183,15 +229,33 @@ export const CommitteeManager = () => {
     }
   };
 
-  const filteredMembers = members.filter((m) => {
-    const matchesCategory = m.category === activeTab;
-    const matchesSearch =
-      m.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      m.role?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      m.area?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      m.university?.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  const filteredMembers = members
+    .filter((m) => {
+      const matchesCategory = m.category === activeTab;
+      const matchesSearch =
+        m.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        m.role?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        m.area?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        m.university?.toLowerCase().includes(searchTerm.toLowerCase());
+      return matchesCategory && matchesSearch;
+    })
+    .sort((a, b) => {
+      if (activeTab === 'exco') {
+        const orderA = EXCO_ROLES.indexOf(a.role);
+        const orderB = EXCO_ROLES.indexOf(b.role);
+        if (orderA !== -1 && orderB !== -1) return orderA - orderB;
+        if (orderA !== -1) return -1;
+        if (orderB !== -1) return 1;
+        return (a.display_order || 0) - (b.display_order || 0);
+      } else {
+        const orderA = REPRESENTATIVE_AREAS.indexOf(a.area);
+        const orderB = REPRESENTATIVE_AREAS.indexOf(b.area);
+        if (orderA !== -1 && orderB !== -1) return orderA - orderB;
+        if (orderA !== -1) return -1;
+        if (orderB !== -1) return 1;
+        return (a.display_order || 0) - (b.display_order || 0);
+      }
+    });
 
   return (
     <div className="p-6 md:p-10 space-y-6 max-w-7xl mx-auto">
@@ -303,17 +367,17 @@ export const CommitteeManager = () => {
 
               {/* Info */}
               <h3 className="font-bold text-white text-base leading-snug">{member.name}</h3>
-              <p className="text-xs text-emerald-400 font-semibold mt-0.5">{member.role}</p>
-
-              {member.area && (
-                <div className="mt-2 text-xs text-slate-400 flex items-center gap-1 justify-center">
-                  <MapPin className="w-3.5 h-3.5 text-slate-500" />
-                  <span>{member.area}</span>
+              {member.category === 'rep' ? (
+                <div className="mt-1.5 inline-flex items-center gap-1.5 text-xs font-bold text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-3 py-0.5 rounded-full">
+                  <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>{member.area || 'Representative'}</span>
                 </div>
+              ) : (
+                <p className="text-xs text-emerald-400 font-semibold mt-1">{member.role}</p>
               )}
 
               {member.university && (
-                <div className="mt-1 text-xs text-slate-400 flex items-center gap-1 justify-center">
+                <div className="mt-2 text-xs text-slate-400 flex items-center gap-1 justify-center">
                   <GraduationCap className="w-3.5 h-3.5 text-slate-500" />
                   <span>{member.university}</span>
                 </div>
@@ -367,11 +431,19 @@ export const CommitteeManager = () => {
                 </label>
                 <select
                   value={form.category}
-                  onChange={(e) => setForm({ ...form, category: e.target.value })}
+                  onChange={(e) => {
+                    const newCat = e.target.value;
+                    setForm({
+                      ...form,
+                      category: newCat,
+                      role: newCat === 'rep' ? 'Area Representative' : (EXCO_ROLES.includes(form.role) ? form.role : EXCO_ROLES[0]),
+                      area: newCat === 'rep' ? (REPRESENTATIVE_AREAS.includes(form.area) ? form.area : REPRESENTATIVE_AREAS[0]) : '',
+                    });
+                  }}
                   className="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                 >
-                  <option value="exco">Executive Committee (Exco)</option>
-                  <option value="rep">Area Representative</option>
+                  <option value="exco">Executive Committee (ExCo)</option>
+                  <option value="rep">Area Representative (Rep)</option>
                 </select>
               </div>
 
@@ -382,54 +454,64 @@ export const CommitteeManager = () => {
                   type="text"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  placeholder="e.g. Johnathan Doe"
+                  placeholder="e.g. Kaviya Selvam"
                   required
                   className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                 />
               </div>
 
-              {/* Role */}
+              {/* Role Dropdown (ExCo Only) */}
+              {form.category === 'exco' && (
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                    Executive Role / Designation *
+                  </label>
+                  <select
+                    value={form.role}
+                    onChange={(e) => setForm({ ...form, role: e.target.value })}
+                    className="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                  >
+                    {EXCO_ROLES.map((role) => (
+                      <option key={role} value={role}>
+                        {role}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {/* Assigned Area Dropdown (Area Rep Only) */}
+              {form.category === 'rep' && (
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                    Assigned Area / Division *
+                  </label>
+                  <select
+                    value={form.area}
+                    onChange={(e) => setForm({ ...form, area: e.target.value })}
+                    className="w-full px-3 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                  >
+                    {REPRESENTATIVE_AREAS.map((area) => (
+                      <option key={area} value={area}>
+                        {area}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {/* University */}
               <div>
                 <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                  Designation / Role *
+                  University / Faculty (Optional)
                 </label>
                 <input
                   type="text"
-                  value={form.role}
-                  onChange={(e) => setForm({ ...form, role: e.target.value })}
-                  placeholder={form.category === 'exco' ? 'e.g. President, Secretary' : 'e.g. Area Representative'}
-                  required
+                  value={form.university}
+                  onChange={(e) => setForm({ ...form, university: e.target.value })}
+                  placeholder="e.g. University of Peradeniya"
                   className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                 />
-              </div>
-
-              {/* Area & University */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                    {form.category === 'rep' ? 'Assigned Area *' : 'Area / Division'}
-                  </label>
-                  <input
-                    type="text"
-                    value={form.area}
-                    onChange={(e) => setForm({ ...form, area: e.target.value })}
-                    placeholder="e.g. Hatton, Norwood"
-                    className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                    University / Faculty
-                  </label>
-                  <input
-                    type="text"
-                    value={form.university}
-                    onChange={(e) => setForm({ ...form, university: e.target.value })}
-                    placeholder="e.g. University of Peradeniya"
-                    className="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-700 rounded-xl text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
-                  />
-                </div>
               </div>
 
               {/* Photo Upload */}
